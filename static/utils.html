@@ -1,0 +1,21 @@
+<script>
+  //google.script.runをPromiseで提供するwrapper
+  function getGs() {
+    var gs = {};
+    var ks = Object.keys(google.script.run);
+    for (var i = 0; i < ks.length; i++) {
+      gs[ks[i]] = (function (k) {
+        return function () {
+          var args = arguments;
+          return new Promise(function (resolve, reject) {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              [k].apply(google.script.run, args);
+          });
+        };
+      })(ks[i]);
+    }
+    return gs;
+  }
+</script>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Webhook</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.22.3/dist/css/uikit.min.css" />
+    <base target="_top" />
+  </head>
+  <body>
+    <div class="app uk-container uk-container-small uk-position-relative">
+      <h1>HatenaBlog Webhook</h1>
+      <form class="uk-form-horizontal" id="form">
+        <h2>Mastodon</h2>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="use-mastodon">Post to Mastodon</label>
+          <div class="uk-form-controls uk-form-controls-text">
+              <input class="uk-checkbox" id="use-mastodon" type="checkbox">
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="mastodon-domain">Mastodon Domain</label>
+          <div class="uk-form-controls">
+              <input class="uk-input" id="mastodon-domain" type="text" placeholder="mstdn.jp, mastodon.social, fedibird.com">
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="mastodon-access-token">MastodonのAccessToken</label>
+          <div class="uk-form-controls">
+              <input class="uk-input" id="mastodon-access-token" type="password" placeholder="アクセストークン">
+          </div>
+        </div>
+        <h2>Bluesky</h2>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="use-bluesky">Post to Bluesky</label>
+          <div class="uk-form-controls uk-form-controls-text">
+              <input class="uk-checkbox" id="use-bluesky" type="checkbox">
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="bluesky-id">Bluesky ID</label>
+          <div class="uk-form-controls">
+              <input class="uk-input" id="bluesky-id" type="text" placeholder="example.bsky.social">
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="bluesky-app-password">Bluesky App Password</label>
+          <div class="uk-form-controls">
+              <input class="uk-input" id="bluesky-app-password" type="password" placeholder="アプリのパスワード。アカウントのパスワードではない">
+          </div>
+        </div>
+        <button class="uk-button uk-button-primary" id="save" type="submit">保存</button>
+      </form>
+    </div>
+    <?!= getContent('utils'); ?>
+    <script>
+      const save = document.getElementById('save');
+      const useMastodonCheckbox = document.querySelector('#use-mastodon');
+      const mastodonDomainInput = document.querySelector('#mastodon-domain');
+      const mastodonAccessTokenInput = document.querySelector('#mastodon-access-token');
+      const useBlueskyCheckbox = document.querySelector('#use-bluesky');
+      const blueskyIdInput = document.querySelector('#bluesky-id');
+      const blueskyAppPasswordInput = document.querySelector('#bluesky-app-password');
+      const gs = getGs();
+      save.setAttribute('disabled', '');
+      gs.getConfigs().then((result) => {
+        useMastodonCheckbox.checked = result.useMastodon === 'true' ? true : false;
+        mastodonDomainInput.value = result.mastodonDomain;
+        mastodonAccessTokenInput.value = result.mastodonAccessToken;
+        useBlueskyCheckbox.checked = result.useBluesky === 'true' ? true : false;
+        blueskyIdInput.value = result.blueskyId;
+        blueskyAppPasswordInput.value = result.blueskyAppPassword;
+        save.removeAttribute('disabled');
+      })
+      document.querySelector('#form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        save.setAttribute('disabled', '');
+        gs.setConfigs({
+          useMastodon: useMastodonCheckbox.checked,
+          mastodonDomain: mastodonDomainInput.value,
+          mastodonAccessToken: mastodonAccessTokenInput.value === "*****" ? '' : mastodonAccessTokenInput.value,
+          useBluesky: useBlueskyCheckbox.checked,
+          blueskyId: blueskyIdInput.value,
+          blueskyAppPassword:blueskyAppPasswordInput.value === "*****" ? '' : mastodonAccessTokenInput.value
+        }).then(() => {
+          save.removeAttribute('disabled');
+        })
+      }) 
+    </script>
+  </body>
+</html>
