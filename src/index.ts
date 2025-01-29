@@ -76,7 +76,7 @@ function getContent(filename: string) {
 }
 
 function getConfigs() {
-  getProperties()
+  return getProperties()
 }
 
 function setConfigs(data: {[key: string]: string}) {
