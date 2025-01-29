@@ -31,7 +31,8 @@ interface WebhookPayload {
       publication_old_status: PublicationStatus | "",
       user: string,
       timestamp: string
-  }
+  },
+  token: string
 }
 
 function doGet(event: GoogleAppsScript.Events.DoGet) {
@@ -43,6 +44,7 @@ function doPost(event: GoogleAppsScript.Events.DoPost) {
   const content = event.postData.contents;
   const data: WebhookPayload = JSON.parse(content);
   if(!justPublished(data.client_payload.publication_new_status, data.client_payload.publication_old_status)) return;
+  if(PropertiesService.getScriptProperties().getProperty("blogToken") !== data.token) return;
   const requests = createRequests(data)
 
   UrlFetchApp.fetchAll(requests)
