@@ -1,8 +1,9 @@
 const keys = [
+  'blogToken',
   'useMastodon', 'mastodonDomain', 'mastodonAccessToken',
   'useBluesky', 'blueskyId', 'blueskyAppPassword',
 ];
-const privateKeys = ['mastodonAccessToken', 'blueskyAppPassword']
+const privateKeys = ['mastodonAccessToken', 'blueskyAppPassword', 'blogToken']
 
 export function getProperties() {
   const sp = PropertiesService.getScriptProperties()

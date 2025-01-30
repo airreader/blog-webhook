@@ -10,6 +10,12 @@
     <div class="app uk-container uk-container-small uk-position-relative">
       <h1>HatenaBlog Webhook</h1>
       <form class="uk-form-horizontal" id="form">
+        <div class="uk-margin">
+          <label class="uk-form-label" for="blog-token">Webhook Token</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="blog-token" type="password" placeholder="">
+          </div>
+        </div>        
         <h2>Mastodon</h2>
         <div class="uk-margin">
           <label class="uk-form-label" for="use-mastodon">Post to Mastodon</label>
@@ -54,6 +60,7 @@
     <?!= getContent('utils'); ?>
     <script>
       const save = document.getElementById('save');
+      const blogTokenInput = document.querySelector('#blog-token');
       const useMastodonCheckbox = document.querySelector('#use-mastodon');
       const mastodonDomainInput = document.querySelector('#mastodon-domain');
       const mastodonAccessTokenInput = document.querySelector('#mastodon-access-token');
@@ -63,6 +70,7 @@
       const gs = getGs();
       save.setAttribute('disabled', '');
       gs.getConfigs().then((result) => {
+        blogTokenInput.value = result.blogToken;
         useMastodonCheckbox.checked = result.useMastodon === 'true' ? true : false;
         mastodonDomainInput.value = result.mastodonDomain;
         mastodonAccessTokenInput.value = result.mastodonAccessToken;
@@ -75,6 +83,7 @@
         event.preventDefault();
         save.setAttribute('disabled', '');
         gs.setConfigs({
+          blogToken: blogTokenInput.value === "*****" ? '' : mastodonAccessTokenInput.value,
           useMastodon: useMastodonCheckbox.checked,
           mastodonDomain: mastodonDomainInput.value,
           mastodonAccessToken: mastodonAccessTokenInput.value === "*****" ? '' : mastodonAccessTokenInput.value,
