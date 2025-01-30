@@ -1,5 +1,4 @@
-# HatenaBlogのWebhookを使ってSNSなどに投稿する
-ルート直下の　`.clasp.json` がないので以下の内容でファイルを作成する必要がある
-```
+# 使い方
+1． ルート直下に　`.clasp.json` を追加する
 {"scriptId":"{ユーザーのApps Script の ScriptId}","rootDir":"dist"}
 ```
